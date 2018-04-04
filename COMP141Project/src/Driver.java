@@ -174,10 +174,14 @@ public class Driver {
 	AST parseStatement() throws ParsingException {
 		 System.out.println("Entering parseStatement");
 		AST tree = parseBaseStatement();
-		while (nextToken().value == ";") {
+		System.out.println("after parse base statement token is " + nextToken().value);
+		while (nextToken().value.equals(";")) {
+			 System.out.println("Entering while loop for ;");
 			Token t = nextToken();
 			consumeToken();
-			tree = new AST(t, tree, parseBaseStatement(), null);
+			// original: tree = new AST(t, tree, parseBaseStatement(), null);
+			tree = new AST(t, tree, null, parseBaseStatement());
+
 		}
 		return tree;
 	}
@@ -306,6 +310,8 @@ public class Driver {
 		String inFileName = args[0];
 
 		d.tokenList = d.scanner(inFileName);
+		
+
 		try {
 			AST ast = d.parseStatement();
 			d.printAST(ast);
