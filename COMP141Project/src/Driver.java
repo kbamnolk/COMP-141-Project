@@ -13,7 +13,12 @@ they are descibed
 in English. Then, the list of functions that remain to be defined are 
 given.
 */
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.*;
+import java.util.Scanner;
+import java.io.FileNotFoundException;
 
 public class Driver {
 	class Token { // each token has a value and a type
@@ -51,12 +56,71 @@ public class Driver {
 	class ParsingException extends Exception {
 	} // this is to generate Parsing errors
 
-	ArrayList<Token> scanner() {
+	ArrayList<Token> scanner(String fName) {
 		ArrayList<Token> list = new ArrayList<Token>();
 		/*
 		 * This is where you define your scanner. It is supposed to return a list.
 		 */
+		System.out.println("Inside scanner; fname is " + fName);
+
+		try {
+			Scanner input = new Scanner(fName);
+
+			File file = new File(input.nextLine());
+			input = new Scanner(file);
+			FileReader fr = new FileReader(file);
+			BufferedReader br = new BufferedReader(fr);
+			String tokenType;
+
+			while (input.hasNextLine()) {
+				String s = br.readLine();
+				Scanner input2 = new Scanner(input.nextLine());
+
+				while (input2.hasNext()) {
+					String token = input2.next();
+					tokenType = parseToken(token);
+
+					// output.println(tokenType + " " + token);
+					Token tok = new Token(token, tokenType);
+					list.add(tok);
+				}
+			}
+
+			input.close();
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 		return list;
+	}
+
+	private String parseToken(String token) {
+
+		if (token.equals("false") || token.equals("true")) {
+			return "BOOL";
+		}
+
+		// if | then | else | endif | while | do | endwhile | skip
+		if (token.equals("if") || token.equals("then") || token.equals("else") || token.equals("endif")
+				|| token.equals("while") || token.equals("do") || token.equals("endwhile") || token.equals("skip")) {
+			return "KEYWORD";
+		}
+
+		if (token.equals("+") || token.equals("-") || token.equals("*") || token.equals("/") || token.equals("&")
+				|| token.equals("|") || token.equals("!") || token.equals("(") || token.equals(")") || token.equals("=")
+				|| token.equals("==") || token.equals(":=") || token.equals(";")) {
+			return "PUNCTUATION";
+		}
+
+		if (token.matches("[0-9]+")) {
+			return "NUMBER";
+		}
+
+		if (token.matches("([a-zA-Z])([a-zA-Z0-9])*")) {
+			return "IDENTIFIER";
+		}
+
+		return "MORE";
 	}
 
 	ArrayList<Token> tokenList = new ArrayList<Token>(); // list of tokens accessible to all parsing methods
@@ -163,7 +227,9 @@ public class Driver {
 		/*
 		 * read the input file and pass it to scanner
 		 */
-		d.tokenList = d.scanner();
+		String inFileName = args[0];
+
+		d.tokenList = d.scanner(inFileName);
 		try {
 			AST ast = d.parseStatement();
 			d.printAST(ast);
