@@ -29,9 +29,23 @@ public class Driver {
 			this.value = v; // e.g., "if"
 			this.type = t; // e.g., "KEYWORD"
 		}
-		/*
-		 * Also define getter and setter methods.
-		 */
+
+		public String getValue() {
+			return value;
+		}
+
+		public String getType() {
+			return type;
+		}
+
+		public void setValue(String value) {
+			this.value = value;
+		}
+
+		public void setType(String type) {
+			this.type = type;
+		}
+		
 	}
 
 	class AST {
@@ -74,13 +88,15 @@ public class Driver {
 
 			while (input.hasNextLine()) {
 				String s = br.readLine();
+				System.out.println("s is " + s);
 				Scanner input2 = new Scanner(input.nextLine());
 
 				while (input2.hasNext()) {
 					String token = input2.next();
 					tokenType = parseToken(token);
+					
+					System.out.println("Token is " + token + " tokentype is " + tokenType);
 
-					// output.println(tokenType + " " + token);
 					Token tok = new Token(token, tokenType);
 					list.add(tok);
 				}
@@ -91,33 +107,40 @@ public class Driver {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		
+		for(int i = 0; i < list.size(); i++) {
+			System.out.println("print array list index i " + i);
+            System.out.println(list.get(i).getValue());
+            System.out.println(list.get(i).getType());
+        }
+		
 		return list;
 	}
 
 	private String parseToken(String token) {
 
 		if (token.equals("false") || token.equals("true")) {
-			return "BOOL";
+			return "Bool";
 		}
 
 		// if | then | else | endif | while | do | endwhile | skip
 		if (token.equals("if") || token.equals("then") || token.equals("else") || token.equals("endif")
 				|| token.equals("while") || token.equals("do") || token.equals("endwhile") || token.equals("skip")) {
-			return "KEYWORD";
+			return "Keyword";
 		}
 
 		if (token.equals("+") || token.equals("-") || token.equals("*") || token.equals("/") || token.equals("&")
 				|| token.equals("|") || token.equals("!") || token.equals("(") || token.equals(")") || token.equals("=")
 				|| token.equals("==") || token.equals(":=") || token.equals(";")) {
-			return "PUNCTUATION";
+			return "Punctuation";
 		}
 
 		if (token.matches("[0-9]+")) {
-			return "NUMBER";
+			return "Number";
 		}
 
 		if (token.matches("([a-zA-Z])([a-zA-Z0-9])*")) {
-			return "IDENTIFIER";
+			return "Identifier";
 		}
 
 		return "MORE";
@@ -139,6 +162,7 @@ public class Driver {
 	}
 
 	AST parseStatement() throws ParsingException {
+		 System.out.println("Entering parseStatement");
 		AST tree = parseBaseStatement();
 		while (nextToken().value == ";") {
 			Token t = nextToken();
@@ -150,6 +174,9 @@ public class Driver {
 
 	AST parseBaseStatement() throws ParsingException {
 		AST tree;
+		
+		 System.out.println("Entering parseBaseStatement");
+
 		if (nextToken().type == "Identifier") {
 			tree = parseAssignment();
 		} else if (nextToken().value == "if") {
@@ -165,14 +192,36 @@ public class Driver {
 	}
 
 	AST parseAssignment() throws ParsingException {
-		return null;
+		
+		 System.out.println("Entering parseAssignment");
+
 		/*
 		 * check whether nextToken is an identifier if so, make a AST tree1 with token
 		 * consisting of the identifier, and null children. next check if the next token
 		 * is assignment operator. if so make a token t2. next return a tree with t2 in
 		 * the root, left child to be tree1, and right child to be the result of parsing
-		 * expression. otherwise generate parsing error otherwise generate parsing Error
+		 * expression. otherwise generate parsing error  
 		 */
+		 
+		 if (nextToken().type == "Identifier")
+		 {
+			 System.out.println("next token is an identifier");
+			 AST tree;
+			 Token t = new Token(nextToken().value, nextToken().type);
+			 AST tree1 = new AST(t, null, null, null);
+			 consumeToken();
+			 System.out.println("next token is " + nextToken().getValue() + "abcd");
+			 
+			 if(nextToken().getValue().equals(":="))
+			 {
+				 System.out.println("next token is an assignment");
+				 Token t2 = new Token(nextToken().value, nextToken().type);
+				 tree = new AST(t2, tree1, null, parseBaseStatement());
+				 return tree;
+			 }
+			 
+		 }
+		 return null;
 	}
 
 	AST parseIfStatement() throws ParsingException {
