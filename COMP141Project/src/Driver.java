@@ -158,6 +158,16 @@ public class Driver {
 	}
 
 	void printAST(AST tree) {
+		System.out.println("Entering printAST");
+		if (tree != null) {
+			System.out.println("token value is " + tree.token.getValue() + " type is " + tree.token.getType());
+			printAST(tree.left);
+			printAST(tree.middle);
+			printAST(tree.right);
+		}
+		
+
+		
 		/* print the resulting AST to output file */
 	}
 
@@ -216,12 +226,29 @@ public class Driver {
 			 {
 				 System.out.println("next token is an assignment");
 				 Token t2 = new Token(nextToken().value, nextToken().type);
-				 tree = new AST(t2, tree1, null, parseBaseStatement());
+				 consumeToken();
+				 tree = new AST(t2, tree1, null, parseExpression());
 				 return tree;
 			 }
 			 
 		 }
 		 return null;
+	}
+	
+	AST parseExpression() throws ParsingException {
+		
+		AST tree = null; 
+		System.out.println("inside parseExpression token is " + (nextToken().value));
+		
+		if (nextToken().type == "Number")
+		{
+			System.out.println("FOUND A NUMBAH");
+			Token t = new Token(nextToken().value, nextToken().type);
+			tree = new AST(t, null, null, null);
+			consumeToken();
+		}
+		
+		return tree;
 	}
 
 	AST parseIfStatement() throws ParsingException {
