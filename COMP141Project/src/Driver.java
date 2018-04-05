@@ -174,6 +174,9 @@ public class Driver {
 		System.out.println("Entering parseStatement");
 		AST tree = parseBaseStatement();
 		System.out.println("after parse base statement token is " + nextToken().value);
+		
+		System.out.println("Am I still UP?");
+
 		while (nextToken().value.equals(";")) {
 			System.out.println("Entering while loop for ;");
 			Token t = new Token(nextToken().value, nextToken().type);
