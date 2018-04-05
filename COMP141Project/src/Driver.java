@@ -1,16 +1,16 @@
 
-/* The CFG is defined using EBNF notation. This notation helps you to 
+/* The CFG is defined using EBNF notation. This notation helps you to
 define the
 the parser straightforwardly.
-Basically, for each of the LHS nonterminal you need to define a parsing 
+Basically, for each of the LHS nonterminal you need to define a parsing
 function.
-The body of the function is defined according to the RHS of the CFG 
+The body of the function is defined according to the RHS of the CFG
 rule.
-Here, sample definitions for nonterminals statement and basestatement 
+Here, sample definitions for nonterminals statement and basestatement
 are given.
-For next few, i.e., assignment, ifstatement, whilestatement, and skip 
+For next few, i.e., assignment, ifstatement, whilestatement, and skip
 they are descibed
-in English. Then, the list of functions that remain to be defined are 
+in English. Then, the list of functions that remain to be defined are
 given.
 */
 import java.io.BufferedReader;
@@ -45,7 +45,7 @@ public class Driver {
 		public void setType(String type) {
 			this.type = type;
 		}
-		
+
 	}
 
 	class AST {
@@ -94,7 +94,7 @@ public class Driver {
 				while (input2.hasNext()) {
 					String token = input2.next();
 					tokenType = parseToken(token);
-					
+
 					System.out.println("Token is " + token + " tokentype is " + tokenType);
 
 					Token tok = new Token(token, tokenType);
@@ -107,13 +107,13 @@ public class Driver {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		
-		for(int i = 0; i < list.size(); i++) {
+
+		for (int i = 0; i < list.size(); i++) {
 			System.out.println("print array list index i " + i);
-            System.out.println(list.get(i).getValue());
-            System.out.println(list.get(i).getType());
-        }
-		
+			System.out.println(list.get(i).getValue());
+			System.out.println(list.get(i).getType());
+		}
+
 		return list;
 	}
 
@@ -157,39 +157,53 @@ public class Driver {
 		index++;
 	}
 
-	void printAST(AST tree) {
-		System.out.println("Entering printAST");
+	/* print the resulting AST to output file */
+	/* The spacing string is used to add two spaces for extra level we go */
+	void printAST(AST tree, String spacing) {
+		// System.out.println("Entering printAST");
 		if (tree != null) {
-			System.out.println("token value is " + tree.token.getValue() + " type is " + tree.token.getType());
-			printAST(tree.left);
-			printAST(tree.middle);
-			printAST(tree.right);
+			System.out.println(spacing + "VALUE: " + tree.token.getValue() + " TYPE: " + tree.token.getType());
+			spacing = spacing + "  ";
+			printAST(tree.left, spacing);
+			printAST(tree.middle, spacing);
+			printAST(tree.right, spacing);
 		}
-		
-
-		
-		/* print the resulting AST to output file */
 	}
 
 	AST parseStatement() throws ParsingException {
-		 System.out.println("Entering parseStatement");
+		System.out.println("Entering parseStatement");
 		AST tree = parseBaseStatement();
 		System.out.println("after parse base statement token is " + nextToken().value);
 		while (nextToken().value.equals(";")) {
-			 System.out.println("Entering while loop for ;");
-			Token t = nextToken();
+			System.out.println("Entering while loop for ;");
+			Token t = new Token(nextToken().value, nextToken().type);
 			consumeToken();
-			// original: tree = new AST(t, tree, parseBaseStatement(), null);
-			tree = new AST(t, tree, null, parseBaseStatement());
 
+			// Adding a check here, to see if we are done consuming all the
+			// elements in the ArrayList. Not sure this is the correct check
+			// and the right place to have it here
+			
+			System.out.println("INDEX here IS " + index);
+			System.out.println("LIST size IS " + tokenList.size());
+
+			if (index == tokenList.size()) {
+				System.out.println("Done reading all tokens from the ArrayList...");
+				return tree;
+			}
+			
+			// add code here to get a node for the ';'
+			// Create a new AST node, for the';' and add tree to its left side
+			// This should be the new tree we return
+			// original: tree = new AST(t, tree, parseBaseStatement(), null);
+			tree = new AST(t, parseBaseStatement(), null, tree);
 		}
 		return tree;
 	}
 
 	AST parseBaseStatement() throws ParsingException {
+
 		AST tree;
-		
-		 System.out.println("Entering parseBaseStatement");
+		System.out.println("Entering parseBaseStatement");
 
 		if (nextToken().type == "Identifier") {
 			tree = parseAssignment();
@@ -206,52 +220,54 @@ public class Driver {
 	}
 
 	AST parseAssignment() throws ParsingException {
-		
-		 System.out.println("Entering parseAssignment");
+
+		System.out.println("Entering parseAssignment");
+		AST tree = null;
 
 		/*
 		 * check whether nextToken is an identifier if so, make a AST tree1 with token
 		 * consisting of the identifier, and null children. next check if the next token
 		 * is assignment operator. if so make a token t2. next return a tree with t2 in
 		 * the root, left child to be tree1, and right child to be the result of parsing
-		 * expression. otherwise generate parsing error  
+		 * expression. otherwise generate parsing error
 		 */
-		 
-		 if (nextToken().type == "Identifier")
-		 {
-			 System.out.println("next token is an identifier");
-			 AST tree;
-			 Token t = new Token(nextToken().value, nextToken().type);
-			 AST tree1 = new AST(t, null, null, null);
-			 consumeToken();
-			 System.out.println("next token is " + nextToken().getValue() + "abcd");
-			 
-			 if(nextToken().getValue().equals(":="))
-			 {
-				 System.out.println("next token is an assignment");
-				 Token t2 = new Token(nextToken().value, nextToken().type);
-				 consumeToken();
-				 tree = new AST(t2, tree1, null, parseExpression());
-				 return tree;
-			 }
-			 
-		 }
-		 return null;
+
+		if (nextToken().type == "Identifier") {
+			System.out.println("next token is an identifier");
+			Token t = new Token(nextToken().value, nextToken().type);
+			consumeToken();
+			AST tree1 = new AST(t, null, null, null);
+			System.out.println("next token is " + nextToken().getValue());
+
+			if (nextToken().getValue().equals(":=")) {
+				System.out.println("next token is an assignment");
+				Token t2 = new Token(nextToken().value, nextToken().type);
+				consumeToken();
+				tree = new AST(t2, tree1, null, parseExpression());
+				// return tree;
+			}
+
+		}
+		return tree;
 	}
-	
+
 	AST parseExpression() throws ParsingException {
-		
-		AST tree = null; 
+
+		AST tree = null;
 		System.out.println("inside parseExpression token is " + (nextToken().value));
-		
-		if (nextToken().type == "Number")
-		{
+
+		if (nextToken().type == "Number") {
 			System.out.println("FOUND A NUMBAH");
 			Token t = new Token(nextToken().value, nextToken().type);
-			tree = new AST(t, null, null, null);
 			consumeToken();
+			tree = new AST(t, null, null, null);
+		} else if (nextToken().type == "Bool") {
+			System.out.println("FOUND A BOOL");
+			Token t = new Token(nextToken().value, nextToken().type);
+			consumeToken();
+			tree = new AST(t, null, null, null);
 		}
-		
+
 		return tree;
 	}
 
@@ -310,11 +326,10 @@ public class Driver {
 		String inFileName = args[0];
 
 		d.tokenList = d.scanner(inFileName);
-		
 
 		try {
 			AST ast = d.parseStatement();
-			d.printAST(ast);
+			d.printAST(ast, "  ");
 		} catch (ParsingException e) {
 			System.out.println("Parsing Error!");
 		}
