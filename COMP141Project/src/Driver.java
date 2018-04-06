@@ -124,21 +124,26 @@ public class Driver {
 			String tokenType;
 			output = new PrintWriter(outFName);
 			
-
+			output.println("Scanner: Printing input files and tokens");
+			output.println();
+			
+			int lineNum = 1;
 			while (input.hasNextLine()) {
 				String s = br.readLine();
-				System.out.println("s is " + s);
+				output.println("Line " + lineNum  + ": " + s);
+				lineNum++;
 				Scanner input2 = new Scanner(input.nextLine());
 
 				while (input2.hasNext()) {
 					String token = input2.next();
 					tokenType = parseToken(token);
 
-					System.out.println("Token is " + token + " tokentype is " + tokenType);
+					output.println("Token is " + token + " tokentype is " + tokenType);
 
 					Token tok = new Token(token, tokenType);
 					list.add(tok);
 				}
+				output.println();
 			}
 
 			input.close();
@@ -447,5 +452,8 @@ public class Driver {
 		} catch (ParsingException e) {
 			System.out.println("Parsing Error!");
 		}
+		
+        d.output.close();
+
 	}
 }
