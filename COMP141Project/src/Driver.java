@@ -16,11 +16,15 @@ given.
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.PrintWriter;
 import java.util.*;
 import java.util.Scanner;
 import java.io.FileNotFoundException;
 
 public class Driver {
+	
+	PrintWriter output;
+	
 	class Token { // each token has a value and a type
 		String value;
 		String type;
@@ -102,7 +106,7 @@ public class Driver {
 	class ParsingException extends Exception {
 	} // this is to generate Parsing errors
 
-	ArrayList<Token> scanner(String fName) {
+	ArrayList<Token> scanner(String fName, String outFName) {
 		ArrayList<Token> list = new ArrayList<Token>();
 		/*
 		 * This is where you define your scanner. It is supposed to return a list.
@@ -116,7 +120,10 @@ public class Driver {
 			input = new Scanner(file);
 			FileReader fr = new FileReader(file);
 			BufferedReader br = new BufferedReader(fr);
+			
 			String tokenType;
+			output = new PrintWriter(outFName);
+			
 
 			while (input.hasNextLine()) {
 				String s = br.readLine();
@@ -202,7 +209,7 @@ public class Driver {
 	void printAST(AST tree, String spacing) {
 		// System.out.println("Entering printAST");
 		if (tree != null) {
-			System.out.println(spacing + "VALUE: " + tree.token.getValue() + " TYPE: " + tree.token.getType());
+			output.println(spacing + "VALUE: " + tree.token.getValue() + " TYPE: " + tree.token.getType());
 			spacing = spacing + "  ";
 			printAST(tree.left, spacing);
 			printAST(tree.middle, spacing);
@@ -228,9 +235,6 @@ public class Driver {
 			// original: tree = new AST(t, tree, parseBaseStatement(), null);
 			tree = new AST(t, parseBaseStatement(), null, tree);
 		}
-		
-		//object of nextToken
-		//if(nextToken != null)
 
 		return tree;
 	}
@@ -247,7 +251,7 @@ public class Driver {
 		} else if (nextToken().value.equals("while")) {
 			System.out.println("inside while part");
 			tree = parseWhileStatement();
-		} else if (nextToken().value == "skip") {
+		} else if (nextToken().value.equals("skip")) {
 			tree = parseSkip();
 		} else {
 			throw new ParsingException();
@@ -282,7 +286,6 @@ public class Driver {
 				tree = new AST(t2, tree1, null, parseExpression());
 				// return tree;
 			}
-
 		}
 		return tree;
 	}
@@ -405,12 +408,19 @@ public class Driver {
 	}
 
 	AST parseSkip() throws ParsingException {
-		return null;
+		
 		/*
 		 * check whether the next token is "skip" if so, make a token t1 containing
 		 * "skip" and its type (KEYWORD). return a tree with token t1 as its root null
 		 * for left, middle and right children otherwise generate parsing error
 		 */
+		
+		Token t1 = new Token(nextToken().value, nextToken().type);
+		consumeToken();
+		
+		AST tree = new AST(t1, null, null, null);
+		return tree;
+		
 	}
 
 	/*
@@ -427,8 +437,9 @@ public class Driver {
 		 * read the input file and pass it to scanner
 		 */
 		String inFileName = args[0];
+		String outFileName = args[1] + ".txt";
 
-		d.tokenList = d.scanner(inFileName);
+		d.tokenList = d.scanner(inFileName, outFileName);
 
 		try {
 			AST ast = d.parseStatement();

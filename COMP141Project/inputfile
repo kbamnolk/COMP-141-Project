@@ -1,5 +1,13 @@
+zztop := 2345 ;
+
+while true do
+	x := 5 
+endwhile ;
+
 if true then
 	abc := 9
 else
 	def := 11
-endif
+endif ;
+
+beatles := true 
