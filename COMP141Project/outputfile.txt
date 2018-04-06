@@ -48,30 +48,40 @@ Token is ; tokentype is Punctuation
 
 Line 12: 
 
-Line 13: beatles := true 
+Line 13: skip ;
+Token is skip tokentype is Keyword
+Token is ; tokentype is Punctuation
+
+Line 14: 
+
+Line 15: beatles := true 
 Token is beatles tokentype is Identifier
 Token is := tokentype is Punctuation
 Token is true tokentype is Bool
+
+Printing AST: 
 
   VALUE: ; TYPE: Punctuation
     VALUE: := TYPE: Punctuation
       VALUE: beatles TYPE: Identifier
       VALUE: true TYPE: Bool
     VALUE: ; TYPE: Punctuation
-      VALUE: if TYPE: Keyword
-        VALUE: true TYPE: Bool
-        VALUE: := TYPE: Punctuation
-          VALUE: abc TYPE: Identifier
-          VALUE: 9 TYPE: Number
-        VALUE: := TYPE: Punctuation
-          VALUE: def TYPE: Identifier
-          VALUE: 11 TYPE: Number
+      VALUE: skip TYPE: Keyword
       VALUE: ; TYPE: Punctuation
-        VALUE: while TYPE: Keyword
+        VALUE: if TYPE: Keyword
           VALUE: true TYPE: Bool
           VALUE: := TYPE: Punctuation
-            VALUE: x TYPE: Identifier
-            VALUE: 5 TYPE: Number
-        VALUE: := TYPE: Punctuation
-          VALUE: zztop TYPE: Identifier
-          VALUE: 2345 TYPE: Number
+            VALUE: abc TYPE: Identifier
+            VALUE: 9 TYPE: Number
+          VALUE: := TYPE: Punctuation
+            VALUE: def TYPE: Identifier
+            VALUE: 11 TYPE: Number
+        VALUE: ; TYPE: Punctuation
+          VALUE: while TYPE: Keyword
+            VALUE: true TYPE: Bool
+            VALUE: := TYPE: Punctuation
+              VALUE: x TYPE: Identifier
+              VALUE: 5 TYPE: Number
+          VALUE: := TYPE: Punctuation
+            VALUE: zztop TYPE: Identifier
+            VALUE: 2345 TYPE: Number

@@ -111,7 +111,6 @@ public class Driver {
 		/*
 		 * This is where you define your scanner. It is supposed to return a list.
 		 */
-		System.out.println("Inside scanner; fname is " + fName);
 
 		try {
 			Scanner input = new Scanner(fName);
@@ -152,11 +151,11 @@ public class Driver {
 			ex.printStackTrace();
 		}
 
-		for (int i = 0; i < list.size(); i++) {
+		/*for (int i = 0; i < list.size(); i++) {
 			System.out.println("print array list index i " + i);
 			System.out.println(list.get(i).getValue());
 			System.out.println(list.get(i).getType());
-		}
+		}*/
 
 		return list;
 	}
@@ -212,7 +211,6 @@ public class Driver {
 	/* print the resulting AST to output file */
 	/* The spacing string is used to add two spaces for extra level we go */
 	void printAST(AST tree, String spacing) {
-		// System.out.println("Entering printAST");
 		if (tree != null) {
 			output.println(spacing + "VALUE: " + tree.token.getValue() + " TYPE: " + tree.token.getType());
 			spacing = spacing + "  ";
@@ -223,14 +221,9 @@ public class Driver {
 	}
 
 	AST parseStatement() throws ParsingException {
-		System.out.println("Entering parseStatement");
 		AST tree = parseBaseStatement();
-		//System.out.println("after parse base statement token is " + nextToken().value);
 		
-		System.out.println("Am I still UP?");
-
 		while (nextToken()!= null && nextToken().value.equals(";")) {
-			System.out.println("Entering while loop for ;");
 			Token t = new Token(nextToken().value, nextToken().type);
 			consumeToken();
 			
@@ -247,14 +240,12 @@ public class Driver {
 	AST parseBaseStatement() throws ParsingException {
 
 		AST tree;
-		System.out.println("Entering parseBaseStatement");
 
 		if (nextToken().type == "Identifier") {
 			tree = parseAssignment();
 		} else if (nextToken().value.equals("if")) {
 			tree = parseIfStatement();
 		} else if (nextToken().value.equals("while")) {
-			System.out.println("inside while part");
 			tree = parseWhileStatement();
 		} else if (nextToken().value.equals("skip")) {
 			tree = parseSkip();
@@ -266,7 +257,6 @@ public class Driver {
 
 	AST parseAssignment() throws ParsingException {
 
-		System.out.println("Entering parseAssignment");
 		AST tree = null;
 
 		/*
@@ -278,18 +268,14 @@ public class Driver {
 		 */
 
 		if (nextToken().type == "Identifier") {
-			System.out.println("next token is an identifier");
 			Token t = new Token(nextToken().value, nextToken().type);
 			consumeToken();
 			AST tree1 = new AST(t, null, null, null);
-			System.out.println("next token is " + nextToken().getValue());
 
 			if (nextToken().getValue().equals(":=")) {
-				System.out.println("next token is an assignment");
 				Token t2 = new Token(nextToken().value, nextToken().type);
 				consumeToken();
 				tree = new AST(t2, tree1, null, parseExpression());
-				// return tree;
 			}
 		}
 		return tree;
@@ -298,15 +284,12 @@ public class Driver {
 	AST parseExpression() throws ParsingException {
 
 		AST tree = null;
-		System.out.println("inside parseExpression token is " + (nextToken().value));
 
 		if (nextToken().type == "Number") {
-			System.out.println("FOUND A NUMBER");
 			Token t = new Token(nextToken().value, nextToken().type);
 			consumeToken();
 			tree = new AST(t, null, null, null);
 		} else if (nextToken().type == "Bool") {
-			System.out.println("FOUND A BOOL");
 			Token t = new Token(nextToken().value, nextToken().type);
 			consumeToken();
 			tree = new AST(t, null, null, null);
@@ -330,7 +313,6 @@ public class Driver {
 		 * error
 		 */
 	
-		System.out.println("entering parseIfStatement");
 		
 		Token t1 = new Token(nextToken().value, nextToken().type);
 		consumeToken();
@@ -339,13 +321,11 @@ public class Driver {
 		
 		if(nextToken().value.equals("then"))
 		{
-			System.out.println("inside then");
 			consumeToken();
 			
 			AST tree2 = parseBaseStatement();
 			if(nextToken().value.equals("else"))
 			{
-				System.out.println("inside else");
 				consumeToken();
 				AST tree3 = parseStatement();
 				
@@ -364,10 +344,8 @@ public class Driver {
 	AST parseBoolExpression() throws ParsingException {
 
 		AST tree = null;
-		System.out.println("inside parseBoolExpression token is " + (nextToken().value));
 
 		if (nextToken().type == "Bool") {
-			System.out.println("FOUND A BOOL");
 			Token t = new Token(nextToken().value, nextToken().type);
 			consumeToken();
 			tree = new AST(t, null, null, null);
@@ -388,7 +366,6 @@ public class Driver {
 		 * child otherwise generate parsing error otherwise generate parsing error
 		 * otherwise generate parsing error
 		 */
-		System.out.println("entering parseWhileStatement");
 		
 		Token t1 = new Token(nextToken().value, nextToken().type);
 		consumeToken();
@@ -397,14 +374,11 @@ public class Driver {
 		
 		if(nextToken().value.equals("do"))
 		{
-			System.out.println("inside do");
 			consumeToken();
-			System.out.println("token after do is " + nextToken().value);
 			
 			AST tree2 = parseBaseStatement();
 			if(nextToken().value.equals("endwhile"))
 			{
-				System.out.println("inside endwhile");
 				consumeToken();
 				tree1.setRight(tree2);
 			}
@@ -448,6 +422,8 @@ public class Driver {
 
 		try {
 			AST ast = d.parseStatement();
+			d.output.println("Printing AST: ");
+			d.output.println();
 			d.printAST(ast, "  ");
 		} catch (ParsingException e) {
 			System.out.println("Parsing Error!");
