@@ -1,3 +1,5 @@
-while true do
-	x := 5 
-endwhile
+if true then
+	abc := 9
+else
+	def := 11
+endif

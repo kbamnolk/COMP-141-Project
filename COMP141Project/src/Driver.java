@@ -242,7 +242,7 @@ public class Driver {
 
 		if (nextToken().type == "Identifier") {
 			tree = parseAssignment();
-		} else if (nextToken().value == "if") {
+		} else if (nextToken().value.equals("if")) {
 			tree = parseIfStatement();
 		} else if (nextToken().value.equals("while")) {
 			System.out.println("inside while part");
@@ -308,7 +308,7 @@ public class Driver {
 	}
 
 	AST parseIfStatement() throws ParsingException {
-		return null;
+		
 		/*
 		 * check whether nextToken is "if". if so, make a token t1 for if statement, and
 		 * consume the token. next parse boolean expression and assign it to AST tree1.
@@ -321,11 +321,38 @@ public class Driver {
 		 * parsing error otherwise generate parsing error otherwise generate parsing
 		 * error
 		 */
+	
+		System.out.println("entering parseIfStatement");
+		
+		Token t1 = new Token(nextToken().value, nextToken().type);
+		consumeToken();
+		
+		AST tree1 = new AST(t1, parseBoolExpression(), null, null);
+		
+		if(nextToken().value.equals("then"))
+		{
+			System.out.println("inside then");
+			consumeToken();
+			
+			AST tree2 = parseBaseStatement();
+			if(nextToken().value.equals("else"))
+			{
+				System.out.println("inside else");
+				consumeToken();
+				AST tree3 = parseStatement();
+				
+				if(nextToken().value.equals("endif"))
+				{
+					consumeToken();
+					tree1.setMiddle(tree2);
+					tree1.setRight(tree3);
+				}
+			}
+		}
+		return tree1;
+		
 	}
 
-	/*
-	 * 
-	 */
 	AST parseBoolExpression() throws ParsingException {
 
 		AST tree = null;
