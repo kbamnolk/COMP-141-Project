@@ -65,6 +65,38 @@ public class Driver {
 		/*
 		 * Also define getter and setter methods
 		 */
+
+		public Token getToken() {
+			return token;
+		}
+
+		public AST getLeft() {
+			return left;
+		}
+
+		public AST getMiddle() {
+			return middle;
+		}
+
+		public AST getRight() {
+			return right;
+		}
+
+		public void setToken(Token token) {
+			this.token = token;
+		}
+
+		public void setLeft(AST left) {
+			this.left = left;
+		}
+
+		public void setMiddle(AST middle) {
+			this.middle = middle;
+		}
+
+		public void setRight(AST right) {
+			this.right = right;
+		}
 	}
 
 	class ParsingException extends Exception {
@@ -150,7 +182,15 @@ public class Driver {
 	int index = 0; // index in the list of tokens
 
 	Token nextToken() { // returns the token in the current index
-		return tokenList.get(index);
+		if(tokenList.size() > index)
+		{
+			return tokenList.get(index);
+		}
+		
+		else
+		{
+			return null;
+		}
 	}
 
 	void consumeToken() { // shifts the token forward
@@ -173,26 +213,14 @@ public class Driver {
 	AST parseStatement() throws ParsingException {
 		System.out.println("Entering parseStatement");
 		AST tree = parseBaseStatement();
-		System.out.println("after parse base statement token is " + nextToken().value);
+		//System.out.println("after parse base statement token is " + nextToken().value);
 		
 		System.out.println("Am I still UP?");
 
-		while (nextToken().value.equals(";")) {
+		while (nextToken()!= null && nextToken().value.equals(";")) {
 			System.out.println("Entering while loop for ;");
 			Token t = new Token(nextToken().value, nextToken().type);
 			consumeToken();
-
-			// Adding a check here, to see if we are done consuming all the
-			// elements in the ArrayList. Not sure this is the correct check
-			// and the right place to have it here
-			
-			System.out.println("INDEX here IS " + index);
-			System.out.println("LIST size IS " + tokenList.size());
-
-			if (index == tokenList.size()) {
-				System.out.println("Done reading all tokens from the ArrayList...");
-				return tree;
-			}
 			
 			// add code here to get a node for the ';'
 			// Create a new AST node, for the';' and add tree to its left side
@@ -200,6 +228,10 @@ public class Driver {
 			// original: tree = new AST(t, tree, parseBaseStatement(), null);
 			tree = new AST(t, parseBaseStatement(), null, tree);
 		}
+		
+		//object of nextToken
+		//if(nextToken != null)
+
 		return tree;
 	}
 
@@ -212,7 +244,8 @@ public class Driver {
 			tree = parseAssignment();
 		} else if (nextToken().value == "if") {
 			tree = parseIfStatement();
-		} else if (nextToken().value == "while") {
+		} else if (nextToken().value.equals("while")) {
+			System.out.println("inside while part");
 			tree = parseWhileStatement();
 		} else if (nextToken().value == "skip") {
 			tree = parseSkip();
@@ -260,7 +293,7 @@ public class Driver {
 		System.out.println("inside parseExpression token is " + (nextToken().value));
 
 		if (nextToken().type == "Number") {
-			System.out.println("FOUND A NUMBAH");
+			System.out.println("FOUND A NUMBER");
 			Token t = new Token(nextToken().value, nextToken().type);
 			consumeToken();
 			tree = new AST(t, null, null, null);
@@ -290,8 +323,26 @@ public class Driver {
 		 */
 	}
 
+	/*
+	 * 
+	 */
+	AST parseBoolExpression() throws ParsingException {
+
+		AST tree = null;
+		System.out.println("inside parseBoolExpression token is " + (nextToken().value));
+
+		if (nextToken().type == "Bool") {
+			System.out.println("FOUND A BOOL");
+			Token t = new Token(nextToken().value, nextToken().type);
+			consumeToken();
+			tree = new AST(t, null, null, null);
+		}
+
+		return tree;
+	}
+
 	AST parseWhileStatement() throws ParsingException {
-		return null;
+		
 		/*
 		 * check whether next token is "while" if so, make a token t1 for while loops,
 		 * and consume the token. next parse the boolean expression and assign it to AST
@@ -302,6 +353,28 @@ public class Driver {
 		 * child otherwise generate parsing error otherwise generate parsing error
 		 * otherwise generate parsing error
 		 */
+		System.out.println("entering parseWhileStatement");
+		
+		Token t1 = new Token(nextToken().value, nextToken().type);
+		consumeToken();
+		
+		AST tree1 = new AST(t1, parseBoolExpression(), null, null);
+		
+		if(nextToken().value.equals("do"))
+		{
+			System.out.println("inside do");
+			consumeToken();
+			System.out.println("token after do is " + nextToken().value);
+			
+			AST tree2 = parseBaseStatement();
+			if(nextToken().value.equals("endwhile"))
+			{
+				System.out.println("inside endwhile");
+				consumeToken();
+				tree1.setRight(tree2);
+			}
+		}
+		return tree1;
 	}
 
 	AST parseSkip() throws ParsingException {
