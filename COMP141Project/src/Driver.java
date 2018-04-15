@@ -18,12 +18,15 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
 import java.util.*;
-import java.util.Scanner;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Driver {
 	
 	PrintWriter output;
+	Map<String, String> dictionary = new HashMap<String, String>();
+
 	
 	class Token { // each token has a value and a type
 		String value;
@@ -217,6 +220,36 @@ public class Driver {
 			printAST(tree.left, spacing);
 			printAST(tree.middle, spacing);
 			printAST(tree.right, spacing);
+		}
+	}
+	
+	private void evalAST(AST tree) {	
+		
+		if (tree != null)
+		{
+			evalAST(tree.left);
+			evalAST(tree.middle);
+			evalAST(tree.right);
+
+			if(tree.token.getValue().equals(":="))
+			{
+				System.out.println("Found :=");
+				String key = tree.left.token.getValue();
+				String value = tree.right.token.getValue();
+				System.out.println("key is " + key + " value is " + value);
+				
+				dictionary.put(key, value);          
+			}			 
+
+		}
+		
+	}
+	
+	private void printDictionary() 
+	{
+		for(String key: dictionary.keySet())
+		{
+			System.out.println(key + ": " + dictionary.get(key));
 		}
 	}
 
@@ -425,6 +458,8 @@ public class Driver {
 			d.output.println("Printing AST: ");
 			d.output.println();
 			d.printAST(ast, "  ");
+			d.evalAST(ast);
+			d.printDictionary();
 		} catch (ParsingException e) {
 			System.out.println("Parsing Error!");
 		}
@@ -432,4 +467,7 @@ public class Driver {
         d.output.close();
 
 	}
+
+
+
 }

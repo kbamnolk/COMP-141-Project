@@ -1,87 +1,22 @@
 Scanner: Printing input files and tokens
 
-Line 1: zztop := 2345 ;
-Token is zztop tokentype is Identifier
-Token is := tokentype is Punctuation
-Token is 2345 tokentype is Number
-Token is ; tokentype is Punctuation
-
-Line 2: 
-
-Line 3: while true do
-Token is while tokentype is Keyword
-Token is true tokentype is Bool
-Token is do tokentype is Keyword
-
-Line 4: 	x := 5 
-Token is x tokentype is Identifier
-Token is := tokentype is Punctuation
-Token is 5 tokentype is Number
-
-Line 5: endwhile ;
-Token is endwhile tokentype is Keyword
-Token is ; tokentype is Punctuation
-
-Line 6: 
-
-Line 7: if true then
-Token is if tokentype is Keyword
-Token is true tokentype is Bool
-Token is then tokentype is Keyword
-
-Line 8: 	abc := 9
+Line 1: abc := 1 ;
 Token is abc tokentype is Identifier
 Token is := tokentype is Punctuation
-Token is 9 tokentype is Number
+Token is 1 tokentype is Number
+Token is ; tokentype is Punctuation
 
-Line 9: else
-Token is else tokentype is Keyword
-
-Line 10: 	def := 11
+Line 2: def := 2
 Token is def tokentype is Identifier
 Token is := tokentype is Punctuation
-Token is 11 tokentype is Number
-
-Line 11: endif ;
-Token is endif tokentype is Keyword
-Token is ; tokentype is Punctuation
-
-Line 12: 
-
-Line 13: skip ;
-Token is skip tokentype is Keyword
-Token is ; tokentype is Punctuation
-
-Line 14: 
-
-Line 15: beatles := true 
-Token is beatles tokentype is Identifier
-Token is := tokentype is Punctuation
-Token is true tokentype is Bool
+Token is 2 tokentype is Number
 
 Printing AST: 
 
   VALUE: ; TYPE: Punctuation
     VALUE: := TYPE: Punctuation
-      VALUE: beatles TYPE: Identifier
-      VALUE: true TYPE: Bool
-    VALUE: ; TYPE: Punctuation
-      VALUE: skip TYPE: Keyword
-      VALUE: ; TYPE: Punctuation
-        VALUE: if TYPE: Keyword
-          VALUE: true TYPE: Bool
-          VALUE: := TYPE: Punctuation
-            VALUE: abc TYPE: Identifier
-            VALUE: 9 TYPE: Number
-          VALUE: := TYPE: Punctuation
-            VALUE: def TYPE: Identifier
-            VALUE: 11 TYPE: Number
-        VALUE: ; TYPE: Punctuation
-          VALUE: while TYPE: Keyword
-            VALUE: true TYPE: Bool
-            VALUE: := TYPE: Punctuation
-              VALUE: x TYPE: Identifier
-              VALUE: 5 TYPE: Number
-          VALUE: := TYPE: Punctuation
-            VALUE: zztop TYPE: Identifier
-            VALUE: 2345 TYPE: Number
+      VALUE: def TYPE: Identifier
+      VALUE: 2 TYPE: Number
+    VALUE: := TYPE: Punctuation
+      VALUE: abc TYPE: Identifier
+      VALUE: 1 TYPE: Number
