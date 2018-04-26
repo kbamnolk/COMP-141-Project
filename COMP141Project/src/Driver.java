@@ -223,33 +223,54 @@ public class Driver {
 		}
 	}
 	
+	private boolean evalBoolExpression(AST left) {
+		return true;
+	}
+	
 	private void evalAST(AST tree) {	
 		
 		if (tree != null)
 		{
-			evalAST(tree.left);
-			evalAST(tree.middle);
-			evalAST(tree.right);
 
-			if(tree.token.getValue().equals(":="))
-			{
+			if(tree.token.getValue().equals(";")) {
+				evalAST(tree.left);
+				evalAST(tree.middle);
+				evalAST(tree.right);
+				
+			} else if (tree.token.getValue().equals(":=")) {
 				System.out.println("Found :=");
 				String key = tree.left.token.getValue();
 				String value = tree.right.token.getValue();
 				System.out.println("key is " + key + " value is " + value);
 				
-				dictionary.put(key, value);          
-			}			 
+				dictionary.put(key, value); 
+					
+			} else if (tree.token.getValue().equals("if")) {
+				
+				System.out.println("Inside EvalAST and we found an IF subtree\n");
+				boolean result = evalBoolExpression(tree.left);
+				if (result == true) {
+					evalAST(tree.middle);
+				} else {
+					evalAST(tree.right);
+				}
+				
+			}
 
 		}
 		
 	}
 	
+
+
 	private void printDictionary() 
 	{
+		this.output.println("\nPrinting tree dictionary:\n");
+		
 		for(String key: dictionary.keySet())
 		{
 			System.out.println(key + ": " + dictionary.get(key));
+			this.output.println(key + ": " + dictionary.get(key));
 		}
 	}
 

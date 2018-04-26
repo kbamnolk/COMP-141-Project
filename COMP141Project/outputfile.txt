@@ -1,22 +1,52 @@
 Scanner: Printing input files and tokens
 
-Line 1: abc := 1 ;
-Token is abc tokentype is Identifier
+Line 1: 
+
+Line 2: x := 123 ;
+Token is x tokentype is Identifier
 Token is := tokentype is Punctuation
-Token is 1 tokentype is Number
+Token is 123 tokentype is Number
 Token is ; tokentype is Punctuation
 
-Line 2: def := 2
+Line 3: 
+
+Line 4: if true then
+Token is if tokentype is Keyword
+Token is true tokentype is Bool
+Token is then tokentype is Keyword
+
+Line 5: 	abc := 9
+Token is abc tokentype is Identifier
+Token is := tokentype is Punctuation
+Token is 9 tokentype is Number
+
+Line 6: else
+Token is else tokentype is Keyword
+
+Line 7: 	def := 11
 Token is def tokentype is Identifier
 Token is := tokentype is Punctuation
-Token is 2 tokentype is Number
+Token is 11 tokentype is Number
+
+Line 8: endif 
+Token is endif tokentype is Keyword
 
 Printing AST: 
 
   VALUE: ; TYPE: Punctuation
+    VALUE: if TYPE: Keyword
+      VALUE: true TYPE: Bool
+      VALUE: := TYPE: Punctuation
+        VALUE: abc TYPE: Identifier
+        VALUE: 9 TYPE: Number
+      VALUE: := TYPE: Punctuation
+        VALUE: def TYPE: Identifier
+        VALUE: 11 TYPE: Number
     VALUE: := TYPE: Punctuation
-      VALUE: def TYPE: Identifier
-      VALUE: 2 TYPE: Number
-    VALUE: := TYPE: Punctuation
-      VALUE: abc TYPE: Identifier
-      VALUE: 1 TYPE: Number
+      VALUE: x TYPE: Identifier
+      VALUE: 123 TYPE: Number
+
+Printing tree dictionary:
+
+def: 11
+x: 123

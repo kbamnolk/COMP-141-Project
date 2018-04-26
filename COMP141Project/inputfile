@@ -1,2 +1,8 @@
-abc := 1 ;
-def := 2
+
+x := 123 ;
+
+if true then
+	abc := 9
+else
+	def := 11
+endif 
