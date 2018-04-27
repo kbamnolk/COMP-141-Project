@@ -149,6 +149,8 @@ public class Driver {
 			}
 
 			input.close();
+			
+			output.flush(); // let's write to the file what we have so far
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -223,8 +225,26 @@ public class Driver {
 		}
 	}
 	
-	private boolean evalBoolExpression(AST left) {
-		return true;
+	private boolean evalBoolExpression(AST tree) {
+		if(tree.token.getType().equals("Bool"))
+		{
+			
+			return Boolean.valueOf(tree.token.getValue());
+		}
+		else
+		{
+			if(tree.token.getValue() == "&" || tree.token.getValue() == "|" || tree.token.getValue() == "=")
+			{
+				boolean b1 = evalBoolExpression(tree.left);
+				boolean b2 = evalBoolExpression(tree.right);
+				String op = tree.token.getValue();
+				
+				if(op.equals("=")) {
+					return (b1 == b2);
+				}
+			}
+		}
+		return false;
 	}
 	
 	private void evalAST(AST tree) {	
@@ -479,6 +499,7 @@ public class Driver {
 			d.output.println("Printing AST: ");
 			d.output.println();
 			d.printAST(ast, "  ");
+			d.output.flush();
 			d.evalAST(ast);
 			d.printDictionary();
 		} catch (ParsingException e) {

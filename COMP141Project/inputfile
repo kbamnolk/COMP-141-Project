@@ -1,8 +1,8 @@
+a := 123 ;
+b := 456 ;
 
-x := 123 ;
-
-if true then
-	abc := 9
+if false then
+	karen := 333
 else
-	def := 11
-endif 
+	karen := 555
+endif

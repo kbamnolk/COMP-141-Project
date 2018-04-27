@@ -1,52 +1,61 @@
 Scanner: Printing input files and tokens
 
-Line 1: 
-
-Line 2: x := 123 ;
-Token is x tokentype is Identifier
+Line 1: a := 123 ;
+Token is a tokentype is Identifier
 Token is := tokentype is Punctuation
 Token is 123 tokentype is Number
 Token is ; tokentype is Punctuation
 
+Line 2: b := 456 ;
+Token is b tokentype is Identifier
+Token is := tokentype is Punctuation
+Token is 456 tokentype is Number
+Token is ; tokentype is Punctuation
+
 Line 3: 
 
-Line 4: if true then
+Line 4: if false then
 Token is if tokentype is Keyword
-Token is true tokentype is Bool
+Token is false tokentype is Bool
 Token is then tokentype is Keyword
 
-Line 5: 	abc := 9
-Token is abc tokentype is Identifier
+Line 5: 	karen := 333
+Token is karen tokentype is Identifier
 Token is := tokentype is Punctuation
-Token is 9 tokentype is Number
+Token is 333 tokentype is Number
 
 Line 6: else
 Token is else tokentype is Keyword
 
-Line 7: 	def := 11
-Token is def tokentype is Identifier
+Line 7: 	karen := 555
+Token is karen tokentype is Identifier
 Token is := tokentype is Punctuation
-Token is 11 tokentype is Number
+Token is 555 tokentype is Number
 
-Line 8: endif 
+Line 8: endif
 Token is endif tokentype is Keyword
 
 Printing AST: 
 
   VALUE: ; TYPE: Punctuation
     VALUE: if TYPE: Keyword
-      VALUE: true TYPE: Bool
+      VALUE: false TYPE: Bool
       VALUE: := TYPE: Punctuation
-        VALUE: abc TYPE: Identifier
-        VALUE: 9 TYPE: Number
+        VALUE: karen TYPE: Identifier
+        VALUE: 333 TYPE: Number
       VALUE: := TYPE: Punctuation
-        VALUE: def TYPE: Identifier
-        VALUE: 11 TYPE: Number
-    VALUE: := TYPE: Punctuation
-      VALUE: x TYPE: Identifier
-      VALUE: 123 TYPE: Number
+        VALUE: karen TYPE: Identifier
+        VALUE: 555 TYPE: Number
+    VALUE: ; TYPE: Punctuation
+      VALUE: := TYPE: Punctuation
+        VALUE: b TYPE: Identifier
+        VALUE: 456 TYPE: Number
+      VALUE: := TYPE: Punctuation
+        VALUE: a TYPE: Identifier
+        VALUE: 123 TYPE: Number
 
 Printing tree dictionary:
 
-def: 11
-x: 123
+a: 123
+b: 456
+karen: 555
