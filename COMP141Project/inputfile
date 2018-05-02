@@ -1,8 +1,16 @@
 a := 123 ;
 b := 456 ;
+boolVar := true ;
+
+IamAFalse := false ;
+
+while true do
+	z := 5
+endwhile ;
 
 if false then
 	karen := 333
 else
 	karen := 555
 endif
+

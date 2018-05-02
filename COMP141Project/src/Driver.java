@@ -275,7 +275,12 @@ public class Driver {
 					evalAST(tree.right);
 				}
 				
+			}  else if (tree.token.getValue().equals("while")) {
+				System.out.println("Inside EvalAST and we found an WHILE subtree\n");
+				evalAST(tree.right);
+
 			}
+			
 
 		}
 		
@@ -441,10 +446,12 @@ public class Driver {
 		 * otherwise generate parsing error
 		 */
 		
+		System.out.println("Inside parseWhileStatement\n");
 		Token t1 = new Token(nextToken().value, nextToken().type);
 		consumeToken();
 		
 		AST tree1 = new AST(t1, parseBoolExpression(), null, null);
+		System.out.println("parseWhileStatement: after parsing bool exp\n");
 		
 		if(nextToken().value.equals("do"))
 		{
@@ -455,6 +462,8 @@ public class Driver {
 			{
 				consumeToken();
 				tree1.setRight(tree2);
+				System.out.println("parseWhileStatement: in endwhile\n");
+
 			}
 		}
 		return tree1;

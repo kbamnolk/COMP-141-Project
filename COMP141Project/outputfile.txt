@@ -12,28 +12,60 @@ Token is := tokentype is Punctuation
 Token is 456 tokentype is Number
 Token is ; tokentype is Punctuation
 
-Line 3: 
+Line 3: boolVar := true ;
+Token is boolVar tokentype is Identifier
+Token is := tokentype is Punctuation
+Token is true tokentype is Bool
+Token is ; tokentype is Punctuation
 
-Line 4: if false then
+Line 4: 
+
+Line 5: IamAFalse := false ;
+Token is IamAFalse tokentype is Identifier
+Token is := tokentype is Punctuation
+Token is false tokentype is Bool
+Token is ; tokentype is Punctuation
+
+Line 6: 
+
+Line 7: while true do
+Token is while tokentype is Keyword
+Token is true tokentype is Bool
+Token is do tokentype is Keyword
+
+Line 8: 	z := 5
+Token is z tokentype is Identifier
+Token is := tokentype is Punctuation
+Token is 5 tokentype is Number
+
+Line 9: endwhile ;
+Token is endwhile tokentype is Keyword
+Token is ; tokentype is Punctuation
+
+Line 10: 
+
+Line 11: if false then
 Token is if tokentype is Keyword
 Token is false tokentype is Bool
 Token is then tokentype is Keyword
 
-Line 5: 	karen := 333
+Line 12: 	karen := 333
 Token is karen tokentype is Identifier
 Token is := tokentype is Punctuation
 Token is 333 tokentype is Number
 
-Line 6: else
+Line 13: else
 Token is else tokentype is Keyword
 
-Line 7: 	karen := 555
+Line 14: 	karen := 555
 Token is karen tokentype is Identifier
 Token is := tokentype is Punctuation
 Token is 555 tokentype is Number
 
-Line 8: endif
+Line 15: endif
 Token is endif tokentype is Keyword
+
+Line 16: 
 
 Printing AST: 
 
@@ -47,15 +79,32 @@ Printing AST:
         VALUE: karen TYPE: Identifier
         VALUE: 555 TYPE: Number
     VALUE: ; TYPE: Punctuation
-      VALUE: := TYPE: Punctuation
-        VALUE: b TYPE: Identifier
-        VALUE: 456 TYPE: Number
-      VALUE: := TYPE: Punctuation
-        VALUE: a TYPE: Identifier
-        VALUE: 123 TYPE: Number
+      VALUE: while TYPE: Keyword
+        VALUE: true TYPE: Bool
+        VALUE: := TYPE: Punctuation
+          VALUE: z TYPE: Identifier
+          VALUE: 5 TYPE: Number
+      VALUE: ; TYPE: Punctuation
+        VALUE: := TYPE: Punctuation
+          VALUE: IamAFalse TYPE: Identifier
+          VALUE: false TYPE: Bool
+        VALUE: ; TYPE: Punctuation
+          VALUE: := TYPE: Punctuation
+            VALUE: boolVar TYPE: Identifier
+            VALUE: true TYPE: Bool
+          VALUE: ; TYPE: Punctuation
+            VALUE: := TYPE: Punctuation
+              VALUE: b TYPE: Identifier
+              VALUE: 456 TYPE: Number
+            VALUE: := TYPE: Punctuation
+              VALUE: a TYPE: Identifier
+              VALUE: 123 TYPE: Number
 
 Printing tree dictionary:
 
 a: 123
 b: 456
 karen: 555
+boolVar: true
+IamAFalse: false
+z: 5
