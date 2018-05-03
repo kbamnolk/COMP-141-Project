@@ -156,12 +156,6 @@ public class Driver {
 			ex.printStackTrace();
 		}
 
-		/*for (int i = 0; i < list.size(); i++) {
-			System.out.println("print array list index i " + i);
-			System.out.println(list.get(i).getValue());
-			System.out.println(list.get(i).getType());
-		}*/
-
 		return list;
 	}
 
@@ -258,16 +252,12 @@ public class Driver {
 				evalAST(tree.right);
 				
 			} else if (tree.token.getValue().equals(":=")) {
-				System.out.println("Found :=");
 				String key = tree.left.token.getValue();
-				String value = tree.right.token.getValue();
-				System.out.println("key is " + key + " value is " + value);
-				
+				String value = tree.right.token.getValue();				
 				dictionary.put(key, value); 
 					
 			} else if (tree.token.getValue().equals("if")) {
 				
-				System.out.println("Inside EvalAST and we found an IF subtree\n");
 				boolean result = evalBoolExpression(tree.left);
 				if (result == true) {
 					evalAST(tree.middle);
@@ -276,7 +266,6 @@ public class Driver {
 				}
 				
 			}  else if (tree.token.getValue().equals("while")) {
-				System.out.println("Inside EvalAST and we found an WHILE subtree\n");
 				evalAST(tree.right);
 
 			}
@@ -294,7 +283,6 @@ public class Driver {
 		
 		for(String key: dictionary.keySet())
 		{
-			System.out.println(key + ": " + dictionary.get(key));
 			this.output.println(key + ": " + dictionary.get(key));
 		}
 	}
@@ -446,12 +434,10 @@ public class Driver {
 		 * otherwise generate parsing error
 		 */
 		
-		System.out.println("Inside parseWhileStatement\n");
 		Token t1 = new Token(nextToken().value, nextToken().type);
 		consumeToken();
 		
 		AST tree1 = new AST(t1, parseBoolExpression(), null, null);
-		System.out.println("parseWhileStatement: after parsing bool exp\n");
 		
 		if(nextToken().value.equals("do"))
 		{
@@ -462,7 +448,6 @@ public class Driver {
 			{
 				consumeToken();
 				tree1.setRight(tree2);
-				System.out.println("parseWhileStatement: in endwhile\n");
 
 			}
 		}
@@ -511,6 +496,8 @@ public class Driver {
 			d.output.flush();
 			d.evalAST(ast);
 			d.printDictionary();
+			System.out.println("Successful Run. Thank you for using my compiler!");
+
 		} catch (ParsingException e) {
 			System.out.println("Parsing Error!");
 		}
